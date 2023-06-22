@@ -14,4 +14,7 @@ interface QuoteDao {
 
     @Query("SELECT * FROM Quotes")
     fun getAllQuotes(): Flow<List<QuoteEntity>>
+
+    @Query("SELECT * FROM Quotes ORDER BY RANDOM() LIMIT 1")
+    fun getRandomQuote(): Flow<QuoteEntity>
 }
