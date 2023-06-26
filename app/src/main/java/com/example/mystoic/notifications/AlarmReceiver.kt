@@ -2,39 +2,36 @@ package com.example.mystoic.notifications
 
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.content.res.Resources
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.PermissionChecker
 import com.example.mystoic.R
 
 class AlarmReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context, content: Intent) {
+        AlarmSetter.ensureBootReceiverEnabled(context)
 
-    @SuppressLint("MissingPermission")
-    override fun onReceive(context: Context, intent: Intent) {
-        val receiver = ComponentName(context, BootReceiver::class.java)
-        val text = intent.getStringExtra(context.getString(R.string.daily_quote_intent_text_key))
-        val author = intent.getStringExtra(context.getString(R.string.daily_quote_intent_author_key))
+        val notificationBuilder = buildDailyQuoteNotification(context, content)
 
-        context.packageManager.setComponentEnabledSetting(
-            receiver,
-            PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-            PackageManager.DONT_KILL_APP
-        )
-        intent.extras
-        val builder = NotificationCompat.Builder(context, Resources.getSystem().getString(R.string.quote_channel_id))
+        pushDailyQuoteNotification(context, notificationBuilder)
+    }
+
+    private fun buildDailyQuoteNotification(context: Context, content: Intent) : NotificationCompat.Builder {
+        val text = content.getStringExtra(context.getString(R.string.daily_quote_intent_text_key))
+        val author = content.getStringExtra(context.getString(R.string.daily_quote_intent_author_key))
+        return NotificationCompat.Builder(context, Resources.getSystem().getString(R.string.quote_channel_id))
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(context.getString(R.string.daily_quote))
             .setContentText("$text\n- $author")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-        with(NotificationManagerCompat.from(context)) {
-            // notificationId is a unique int for each notification that you must define
-            notify(0, builder.build())
-        }
     }
 
+    @SuppressLint("MissingPermission")
+    private fun pushDailyQuoteNotification(context: Context, notificationBuilder: NotificationCompat.Builder) {
+        with(NotificationManagerCompat.from(context)) {
+            notify(0, notificationBuilder.build())
+        }
+    }
 }

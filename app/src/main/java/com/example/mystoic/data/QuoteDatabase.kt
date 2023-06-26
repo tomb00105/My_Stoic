@@ -14,10 +14,10 @@ abstract class QuoteDatabase : RoomDatabase() {
     // one from the data if it does not yet exist
     companion object {
         @Volatile
-        private var Instance : QuoteDatabase? = null
+        private var QuoteDatabaseInstance : QuoteDatabase? = null
 
-        fun getDatabase(context: Context): QuoteDatabase {
-            return Instance ?: synchronized(this) {
+        fun createOrPassDatabase(context: Context): QuoteDatabase {
+            return QuoteDatabaseInstance ?: synchronized(this) {
                 Room.databaseBuilder(
                     context,
                     QuoteDatabase::class.java,
@@ -26,7 +26,7 @@ abstract class QuoteDatabase : RoomDatabase() {
                     .createFromAsset("database/quote_database.db")
                     .build()
                     .also {
-                        Instance = it
+                        QuoteDatabaseInstance = it
                     }
             }
         }

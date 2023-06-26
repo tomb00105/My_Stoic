@@ -9,21 +9,32 @@ import androidx.core.app.ComponentActivity
 import com.example.mystoic.R
 
 object DailyQuoteNotificationChannel {
+    private val channelId = Resources.getSystem().getString(R.string.quote_channel_id)
+    private val channelName = Resources.getSystem().getString(R.string.channel_name)
+    private val channelDescription = Resources.getSystem().getString(R.string.channel_description)
+    private const val importance = NotificationManager.IMPORTANCE_DEFAULT
+
     fun createNotificationChannel(context: Context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = Resources.getSystem().getString(R.string.channel_name)
-            val descriptionText = Resources.getSystem().getString(R.string.channel_description)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(
-                Resources.getSystem().getString(R.string.quote_channel_id), name, importance
+        if (apiLevelAtOrAbove26()) {
+            val dailyQuoteChannel = NotificationChannel(
+                channelId,
+                channelName,
+                importance,
             )
-                .apply {
-                    description = descriptionText
-                }
-            // Register the channel with the system
-            val notificationManager: NotificationManager =
-                context.getSystemService(ComponentActivity.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
+
+            dailyQuoteChannel.apply { description = channelDescription }
+
+            val notificationManager = getNotificationManager(context)
+
+            notificationManager.createNotificationChannel(dailyQuoteChannel)
         }
+    }
+
+    private fun apiLevelAtOrAbove26() : Boolean {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+    }
+
+    private fun getNotificationManager(context: Context) : NotificationManager {
+        return context.getSystemService(ComponentActivity.NOTIFICATION_SERVICE) as NotificationManager
     }
 }

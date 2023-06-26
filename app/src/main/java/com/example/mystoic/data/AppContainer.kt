@@ -8,6 +8,6 @@ interface AppContainer {
 
 class AppDataContainer(private val context: Context) : AppContainer {
     override val quoteRepository: QuoteRepository by lazy {
-        OfflineQuoteRepository(QuoteDatabase.getDatabase(context).quoteDao())
+        OfflineQuoteRepository(QuoteDatabase.createOrPassDatabase(context).quoteDao())
     }
 }
