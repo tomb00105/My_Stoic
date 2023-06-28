@@ -1,4 +1,4 @@
-package com.example.mystoic.ui
+package com.example.mystoic.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -10,15 +10,5 @@ import com.example.mystoic.data.QuoteRepository
 import kotlinx.coroutines.flow.Flow
 
 class HomeScreenViewModel(private val quoteRepository: QuoteRepository): ViewModel() {
-
     fun getAllQuotes(): Flow<List<QuoteEntity>> = quoteRepository.getAllQuotesStream()
-
-    companion object {
-        val factory : ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MyStoicApplication)
-                HomeScreenViewModel(application.container.quoteRepository)
-            }
-        }
-    }
 }

@@ -5,13 +5,15 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.res.Resources
 import android.os.Build
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.core.app.ComponentActivity
 import com.example.mystoic.R
 
 object DailyQuoteNotificationChannel {
-    private val channelId = Resources.getSystem().getString(R.string.quote_channel_id)
-    private val channelName = Resources.getSystem().getString(R.string.channel_name)
-    private val channelDescription = Resources.getSystem().getString(R.string.channel_description)
+    private const val channelId = "Daily Quote Channel ID"
+    private const val channelName = "Daily Quote"
+    private const val channelDescription = "Notification for a random daily quote at around 8am every day."
     private const val importance = NotificationManager.IMPORTANCE_DEFAULT
 
     fun createNotificationChannel(context: Context) {

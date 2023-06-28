@@ -15,10 +15,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
-
-
 object AlarmSetter {
-
     suspend fun setDailyQuoteAlarm(
         context: Context,
         quoteRepository: QuoteRepository,
@@ -29,29 +26,33 @@ object AlarmSetter {
         val alarmManager: AlarmManager = getAlarmManager(context)
 
         CoroutineScope(Dispatchers.IO).launch {
-
             val randomQuote: QuoteEntity = getRandomQuote(quoteRepository)
-
             val contentForAlarmReceiver: Intent = setNotificationContent(context, randomQuote)
-
-            val alarmBroadcastWithQuote: PendingIntent = createAlarmBroadcast(
-                context,
-                contentForAlarmReceiver
-            )
-
-            val alarmTime: Long = setAlarmTimeInMillis(
-                hourMinuteSecond[0],
-                hourMinuteSecond[1],
-                hourMinuteSecond[2],
-            )
-
-            alarmManager.setInexactRepeating(
-                AlarmManager.RTC,
-                alarmTime,
-                AlarmManager.INTERVAL_DAY,
-                alarmBroadcastWithQuote
-            )
+            createAndActivateAlarm(context, contentForAlarmReceiver, hourMinuteSecond, alarmManager)
         }
+    }
+
+    private fun createAndActivateAlarm(
+        context: Context,
+        contentForAlarmReceiver: Intent,
+        hourMinuteSecond: IntArray,
+        alarmManager: AlarmManager,
+    ) {
+        val alarmBroadcastWithQuote: PendingIntent = createAlarmBroadcast(
+            context,
+            contentForAlarmReceiver
+        )
+        val alarmTime: Long = setAlarmTimeInMillis(
+            hourMinuteSecond[0],
+            hourMinuteSecond[1],
+            hourMinuteSecond[2],
+        )
+        alarmManager.setInexactRepeating(
+            AlarmManager.RTC,
+            alarmTime,
+            AlarmManager.INTERVAL_DAY,
+            alarmBroadcastWithQuote
+        )
     }
 
     private suspend fun getRandomQuote(quoteRepository: QuoteRepository) : QuoteEntity {

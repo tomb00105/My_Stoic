@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">My Stoic</string>
-    <string name="channel_name">Daily Quote</string>
-    <string name="channel_description">Notification for a random daily quote at around 8am every day.</string>
-    <string name="quote_channel_id">Daily Quote Channel ID</string>
     <string name="daily_quote">Daily Quote</string>
     <string name="daily_quote_intent_text_key">text</string>
     <string name="daily_quote_intent_author_key">author</string>
     <string name="boot_completed">android.intent.action.BOOT_COMPLETED</string>
+    <string name="home_screen_route">Home</string>
+    <string name="journal_screen_route">Journal</string>
+    <string name="back_button">Back</string>
 </resources>

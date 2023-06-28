@@ -12,8 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 // Used to restart alarm when the device is restarted
-class BootReceiver : BroadcastReceiver() {
-
+object BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         // Repeating Daily Quote Notification Alarm needs to set again on every reboot.
         setAlarmOnReboot(context, intent)
