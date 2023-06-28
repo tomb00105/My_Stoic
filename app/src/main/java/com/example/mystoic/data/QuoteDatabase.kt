@@ -21,9 +21,9 @@ abstract class QuoteDatabase : RoomDatabase() {
                 Room.databaseBuilder(
                     context,
                     QuoteDatabase::class.java,
-                    "quote_database"
+                    "quotes_database"
                 )
-                    .createFromAsset("database/quote_database.db")
+                    .createFromAsset("database/quotes_database.db")
                     .build()
                     .also {
                         QuoteDatabaseInstance = it

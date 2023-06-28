@@ -2,17 +2,15 @@ package com.example.mystoic.data
 
 import kotlinx.coroutines.flow.Flow
 
-interface QuoteRepository {
+interface QuoteDatabaseRepository {
 
     fun getAllQuotesStream(): Flow<List<QuoteEntity>>
 
     fun getRandomQuoteStream(): Flow<QuoteEntity>
 }
 
-class OfflineQuoteRepository(private val quoteDao: QuoteDao) : QuoteRepository {
+class OfflineQuoteDatabaseRepository(private val quoteDao: QuoteDao) : QuoteDatabaseRepository {
     override fun getAllQuotesStream(): Flow<List<QuoteEntity>> = quoteDao.getAllQuotes()
 
     override fun getRandomQuoteStream(): Flow<QuoteEntity> = quoteDao.getRandomQuote()
-
-
 }

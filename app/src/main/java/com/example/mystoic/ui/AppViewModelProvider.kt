@@ -11,10 +11,13 @@ import com.example.mystoic.ui.journal.JournalScreenViewModel
 object AppViewModelProvider {
     val Factory = viewModelFactory {
         initializer {
-            JournalScreenViewModel(myStoicApplication().container.quoteRepository)
+            JournalScreenViewModel(myStoicApplication().container.quoteDatabaseRepository)
         }
         initializer {
-            HomeScreenViewModel(myStoicApplication().container.quoteRepository)
+            HomeScreenViewModel(
+                myStoicApplication().container.quoteDatabaseRepository,
+                myStoicApplication().container.dailyQuoteRepository
+            )
         }
     }
 }

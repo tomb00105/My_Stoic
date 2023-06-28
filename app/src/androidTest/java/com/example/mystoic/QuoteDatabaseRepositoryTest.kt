@@ -2,9 +2,9 @@ package com.example.mystoic
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import com.example.mystoic.data.OfflineQuoteRepository
+import com.example.mystoic.data.OfflineQuoteDatabaseRepository
 import com.example.mystoic.data.QuoteDatabase
-import com.example.mystoic.data.QuoteRepository
+import com.example.mystoic.data.QuoteDatabaseRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 
@@ -13,30 +13,32 @@ import org.junit.Test
 import org.junit.Assert.*
 import org.junit.Before
 
-class QuoteRepositoryTest {
+class QuoteDatabaseRepositoryTest {
     private val numberOfQuotes = 1774
-    private lateinit var quoteRepository: QuoteRepository
+    private lateinit var quoteDatabaseRepository: QuoteDatabaseRepository
 
     @Before
     fun createDb() {
         val context = ApplicationProvider.getApplicationContext<Context>()
-        quoteRepository = OfflineQuoteRepository(QuoteDatabase.createOrPassDatabase(context).quoteDao())
+        quoteDatabaseRepository = OfflineQuoteDatabaseRepository(QuoteDatabase.createOrPassDatabase(context).quoteDao())
     }
 
+    @kotlinx.coroutines.ExperimentalCoroutinesApi
     @Test
     fun getAllQuotes_returnsAllQuotes() {
-        val quotesFlow = quoteRepository.getAllQuotesStream()
+        val quotesFlow = quoteDatabaseRepository.getAllQuotesStream()
         runTest {
             val quotes = quotesFlow.first()
             assertTrue("Quotes: ${quotes.size.toString()}", quotes.size == numberOfQuotes)
         }
     }
 
+    @kotlinx.coroutines.ExperimentalCoroutinesApi
     @Test
     fun getRandomQuote_returnsRandomQuote() {
         runTest {
-            val quoteOne = quoteRepository.getRandomQuoteStream().first()
-            val quoteTwo = quoteRepository.getRandomQuoteStream().first()
+            val quoteOne = quoteDatabaseRepository.getRandomQuoteStream().first()
+            val quoteTwo = quoteDatabaseRepository.getRandomQuoteStream().first()
             assertNotEquals("$quoteOne equal to $quoteTwo", quoteOne, quoteTwo)
         }
     }
