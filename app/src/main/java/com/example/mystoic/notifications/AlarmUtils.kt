@@ -1,8 +1,6 @@
 package com.example.mystoic.notifications
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.ComponentName
@@ -14,6 +12,7 @@ import java.util.Calendar
 class AlarmUtils(val context: Context) {
     private var alarmMgr: AlarmManager? = null
     private var alarmIntent: PendingIntent
+    private val dayInMillis = 86400000L
 
     init {
         alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -38,15 +37,16 @@ class AlarmUtils(val context: Context) {
         }
 
         val calendar: Calendar = Calendar.getInstance().apply {
-            timeInMillis = System.currentTimeMillis()
-            set(Calendar.HOUR_OF_DAY, 19)
+            set(Calendar.HOUR_OF_DAY, 8)
             set(Calendar.MINUTE, 0)
             set(Calendar.SECOND, 0)
         }
 
+        val alarmTime = calendar.timeInMillis + dayInMillis
+
         alarmMgr?.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
-            calendar.timeInMillis,
+            alarmTime,
             alarmIntent
         )
     }

@@ -1,10 +1,10 @@
 package com.example.mystoic.ui.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mystoic.data.DailyQuoteRepository
 import com.example.mystoic.data.QuoteDatabaseRepository
-import com.example.mystoic.data.QuoteEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
@@ -17,9 +17,13 @@ class HomeScreenViewModel(
     private val dailyQuoteRepository: DailyQuoteRepository,
 ): ViewModel() {
     init {
-        if (isDailyQuoteEmpty()) {
-            setNewDailyQuote()
+        viewModelScope.launch {
+            if (isDailyQuoteEmpty()) {
+                Log.d("IS_QUOTE_EMPTY", "Log was empty in viewModel")
+                setNewDailyQuote()
+            }
         }
+
     }
     val homeScreenUiState: Flow<HomeScreenUiState> =
         dailyQuoteRepository.getCurrentDailyQuoteEntityStream().map {
@@ -31,11 +35,8 @@ class HomeScreenViewModel(
                 initialValue = HomeScreenUiState()
             )
 
-    private fun isDailyQuoteEmpty(): Boolean {
-        var isEmpty = false
-        viewModelScope.launch {
-            isEmpty = dailyQuoteRepository.dataStoreEmpty()
-        }
+    private suspend fun isDailyQuoteEmpty(): Boolean {
+        val isEmpty = dailyQuoteRepository.dataStoreEmpty()
         return isEmpty
     }
 

@@ -1,7 +1,6 @@
 package com.example.mystoic
 
 import android.app.Application
-import androidx.compose.ui.platform.LocalContext
 import com.example.mystoic.data.AppContainer
 import com.example.mystoic.data.AppDataContainer
 import com.example.mystoic.notifications.DailyQuoteNotificationChannel

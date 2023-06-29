@@ -29,7 +29,7 @@ class QuoteDatabaseRepositoryTest {
         val quotesFlow = quoteDatabaseRepository.getAllQuotesStream()
         runTest {
             val quotes = quotesFlow.first()
-            assertTrue("Quotes: ${quotes.size.toString()}", quotes.size == numberOfQuotes)
+            assertTrue("Quotes: ${quotes.size}", quotes.size == numberOfQuotes)
         }
     }
 

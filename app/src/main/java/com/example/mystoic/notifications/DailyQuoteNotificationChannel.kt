@@ -3,12 +3,8 @@ package com.example.mystoic.notifications
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.content.res.Resources
 import android.os.Build
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.core.app.ComponentActivity
-import com.example.mystoic.R
 
 object DailyQuoteNotificationChannel {
     private const val channelId = "Daily Quote Channel ID"

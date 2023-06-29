@@ -1,4 +1,4 @@
-package com.example.mystoic.ui
+package com.example.mystoic
 
 import android.Manifest
 import androidx.compose.foundation.layout.Column

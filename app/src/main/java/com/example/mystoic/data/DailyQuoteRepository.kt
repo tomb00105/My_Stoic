@@ -7,8 +7,6 @@ interface DailyQuoteRepository {
 
     suspend fun saveNewDailyQuote(quoteEntity: QuoteEntity)
 
-    suspend fun clearDailyQuote()
-
     suspend fun dataStoreEmpty(): Boolean
 }
 
@@ -18,9 +16,6 @@ class OfflineDailyQuoteRepository(private val dailyQuoteDataStore : DailyQuoteDa
 
     override suspend fun saveNewDailyQuote(quoteEntity: QuoteEntity) =
         dailyQuoteDataStore.saveToDataStore(quoteEntity)
-
-    override suspend fun clearDailyQuote() =
-        dailyQuoteDataStore.clearDataStore()
 
     override suspend fun dataStoreEmpty() =
         dailyQuoteDataStore.dataStoreEmpty()
