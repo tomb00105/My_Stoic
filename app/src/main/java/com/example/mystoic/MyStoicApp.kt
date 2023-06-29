@@ -1,5 +1,6 @@
 package com.example.mystoic
 
+import android.Manifest
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -16,7 +17,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.mystoic.navigation.BottomNavigationScreens
 import com.example.mystoic.ui.MainScreen
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberPermissionState
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun MyStoicApp(
     windowSizeClass: WindowSizeClass,

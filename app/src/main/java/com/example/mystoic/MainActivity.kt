@@ -26,6 +26,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val alarm = AlarmUtils(this)
                     alarm.initRepeatingAlarm()
+
                     MyStoicApp(windowSizeClass = windowSizeClass)
                 }
             }

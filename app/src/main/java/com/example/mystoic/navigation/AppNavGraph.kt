@@ -11,8 +11,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.mystoic.R
+import com.example.mystoic.ui.MainScreen
 import com.example.mystoic.ui.home.HomeScreen
 import com.example.mystoic.ui.journal.JournalScreen
+import com.example.mystoic.ui.permission.RequestPermissions
 
 sealed class BottomNavigationScreens(val route: String, @StringRes val resourceId: Int, val icon: ImageVector) {
     object Home : BottomNavigationScreens("Home", R.string.home_screen_route, Icons.Filled.Home)
