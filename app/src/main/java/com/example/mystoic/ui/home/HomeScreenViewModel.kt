@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mystoic.data.DailyQuoteRepository
 import com.example.mystoic.data.QuoteDatabaseRepository
+import com.example.mystoic.data.QuoteEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
@@ -16,10 +17,8 @@ class HomeScreenViewModel(
     private val dailyQuoteRepository: DailyQuoteRepository,
 ): ViewModel() {
     init {
-        viewModelScope.launch {
-            if (isDailyQuoteEmpty()) {
-                setNewDailyQuote()
-            }
+        if (isDailyQuoteEmpty()) {
+            setNewDailyQuote()
         }
     }
     val homeScreenUiState: Flow<HomeScreenUiState> =
@@ -31,8 +30,13 @@ class HomeScreenViewModel(
                 started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
                 initialValue = HomeScreenUiState()
             )
-    private suspend fun isDailyQuoteEmpty(): Boolean {
-        return dailyQuoteRepository.dataStoreEmpty()
+
+    private fun isDailyQuoteEmpty(): Boolean {
+        var isEmpty = false
+        viewModelScope.launch {
+            isEmpty = dailyQuoteRepository.dataStoreEmpty()
+        }
+        return isEmpty
     }
 
     private fun setNewDailyQuote() {
@@ -48,5 +52,5 @@ class HomeScreenViewModel(
 
 data class HomeScreenUiState(
     val dailyQuoteText: String = "",
-    val dailyQuoteAuthor: String = ""
+    val dailyQuoteAuthor: String = "",
 )

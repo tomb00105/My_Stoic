@@ -5,6 +5,7 @@ import android.app.Application
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.mystoic.MyStoicApplication
@@ -19,12 +20,13 @@ import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
-object DailyQuoteAlarmReceiver : BroadcastReceiver() {
+class DailyQuoteAlarmReceiver : BroadcastReceiver() {
+
     override fun onReceive(context: Context, content: Intent) {
+        Log.d("ALARM_RECEIVED", "Alarm was received!")
         val application = context.applicationContext as Application
         val appContainer = (application as MyStoicApplication).container
         val quoteDatabaseRepository = appContainer.quoteDatabaseRepository
-        AlarmSetter.ensureBootReceiverEnabled(context)
 
         CoroutineScope(Dispatchers.IO).launch {
             val randomQuote = getRandomQuote(quoteDatabaseRepository)
@@ -33,6 +35,7 @@ object DailyQuoteAlarmReceiver : BroadcastReceiver() {
             pushDailyQuoteNotification(context, notificationBuilder)
         }
     }
+
 
     private fun buildDailyQuoteNotification(context: Context, dailyQuote: QuoteEntity) : NotificationCompat.Builder {
 
