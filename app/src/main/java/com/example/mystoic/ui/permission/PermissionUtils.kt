@@ -1,10 +1,8 @@
 package com.example.mystoic.ui.permission
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.provider.Settings
 import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
@@ -28,16 +26,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.mystoic.navigation.TopLevelScreens
 import com.example.mystoic.ui.AppViewModelProvider
-import com.example.mystoic.ui.theme.MyStoicTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
@@ -45,9 +39,9 @@ import com.google.accompanist.permissions.shouldShowRationale
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun RequestPermissions(
-    navController: NavController,
     modifier: Modifier = Modifier,
-    viewModel: PermissionsViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    navController: NavHostController = rememberNavController(),
+    viewModel: PermissionsViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     val openDialog = remember { mutableStateOf(false) }
 
@@ -56,8 +50,10 @@ fun RequestPermissions(
     )
 
     val context = LocalContext.current
+
     val requestButtonIntent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS)
     requestButtonIntent.data = Uri.parse("package:" + context.packageName)
+
     if (openDialog.value) {
         AlertDialog(
             onDismissRequest = {
@@ -157,55 +153,5 @@ fun RequestPermissions(
                 }
             }
         }
-
-
     }
 }
-
-
-
-@Preview(showSystemUi = true, showBackground = true)
-@Composable
-fun RequestPermissionPreview() {
-    MyStoicTheme() {
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Card(modifier = Modifier.padding(16.dp)) {
-                val textToShow = if (true) {
-                    // If the user has denied the permission but the rationale can be shown,
-                    // then gently explain why the app requires this permission
-                    "Notifications are required to send you daily quotes and journal reminders. Please grant the permission."
-                } else {
-                    // If it's the first time the user lands on this feature, or the user
-                    // doesn't want to be asked again for this permission, explain that the
-                    // permission is required
-                    "Notifications are required to send you daily quotes and journal reminders. " +
-                            "Please grant the permission"
-                }
-
-                Column(
-                    modifier = Modifier.padding(4.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Text(
-                        textToShow,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(8.dp)
-                    )
-                    Button(onClick = {
-                        Log.d("PERMISSION_REQUEST", "Permission requested")
-
-                    },
-                        modifier = Modifier.padding(4.dp)
-                    ) {
-                        Text("Request permission")
-                    }
-                }
-            }
-        }
-    }
-}
-
