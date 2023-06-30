@@ -1,5 +1,9 @@
 package com.example.mystoic.ui.home
 
+import android.Manifest
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,7 +24,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mystoic.notifications.AlarmUtils
 import com.example.mystoic.ui.AppViewModelProvider
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
@@ -28,6 +37,11 @@ fun HomeScreen(
 ) {
     val homeScreenUiState by viewModel.homeScreenUiState.collectAsState(initial = HomeScreenUiState())
     val context = LocalContext.current
+    val notificationsPermissionState = rememberPermissionState(
+        Manifest.permission.POST_NOTIFICATIONS
+    )
+    val requestButtonIntent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+    requestButtonIntent.data = Uri.parse("package:" + context.packageName)
     Column(modifier = modifier.fillMaxSize()) {
         Row(
             modifier = Modifier
@@ -50,12 +64,17 @@ fun HomeScreen(
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         Text(text = homeScreenUiState.dailyQuoteText)
-                        Button(onClick = {
-                            val alarmUtils = AlarmUtils(context.applicationContext)
-                            alarmUtils.initRepeatingAlarm()
-                        }
-                        ) {
-                            Text(text = "**Set Alarm**")
+                        if (!notificationsPermissionState.status.isGranted) {
+                            Button(onClick = {
+                                if (notificationsPermissionState.status.shouldShowRationale) {
+                                    notificationsPermissionState.launchPermissionRequest()
+                                } else {
+                                    context.startActivity(requestButtonIntent)
+                                }
+                            }
+                            ) {
+                                Text(text = "Allow Notifications")
+                            }
                         }
                     }
                 }

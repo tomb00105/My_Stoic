@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.mystoic.MyStoicApplication
 import com.example.mystoic.ui.home.HomeScreenViewModel
 import com.example.mystoic.ui.journal.JournalScreenViewModel
+import com.example.mystoic.ui.permission.PermissionsViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
@@ -17,6 +18,11 @@ object AppViewModelProvider {
             HomeScreenViewModel(
                 myStoicApplication().container.quoteDatabaseRepository,
                 myStoicApplication().container.dailyQuoteRepository
+            )
+        }
+        initializer {
+            PermissionsViewModel(
+                myStoicApplication().container.permissionsDataStore
             )
         }
     }

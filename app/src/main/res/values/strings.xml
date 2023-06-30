@@ -7,4 +7,6 @@
     <string name="home_screen_route">Home</string>
     <string name="journal_screen_route">Journal</string>
     <string name="back_button">Back</string>
+    <string name="main_screen_route">Main</string>
+    <string name="permission_screen_route">Permission</string>
 </resources>

@@ -6,6 +6,7 @@ interface AppContainer {
     val quoteDatabaseRepository: QuoteDatabaseRepository
     val dailyQuoteDataStore: DailyQuoteDataStore
     val dailyQuoteRepository: DailyQuoteRepository
+    val permissionsDataStore: PermissionsDataStore
 }
 
 class AppDataContainer(private val context: Context) : AppContainer {
@@ -25,5 +26,10 @@ class AppDataContainer(private val context: Context) : AppContainer {
             dailyQuoteDataStore
         )
     }
+
+    override val permissionsDataStore: PermissionsDataStore by lazy {
+        PermissionsDataStore(context)
+    }
+
 
 }

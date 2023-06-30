@@ -15,7 +15,11 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.example.mystoic.navigation.BottomNavigationScreens
+import com.example.mystoic.navigation.MainNavHost
+import com.example.mystoic.navigation.TopLevelNavHost
+import com.example.mystoic.navigation.TopLevelScreens
 import com.example.mystoic.ui.MainScreen
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
@@ -24,8 +28,9 @@ import com.google.accompanist.permissions.rememberPermissionState
 @Composable
 fun MyStoicApp(
     windowSizeClass: WindowSizeClass,
+    navController: NavHostController = rememberNavController(),
 ) {
-    MainScreen(windowSizeClass)
+    TopLevelNavHost(navController, windowSizeClass)
 }
 
 @Composable

@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "dailyQuote")
+val Context.dailyQuoteDataStore: DataStore<Preferences> by preferencesDataStore(name = "dailyQuote")
 
 class DailyQuoteDataStore(private val context: Context) {
 
@@ -25,7 +25,7 @@ class DailyQuoteDataStore(private val context: Context) {
     }
 
     fun saveToDataStore(quoteEntity: QuoteEntity) {
-        runBlocking { context.dataStore.edit {
+        runBlocking { context.dailyQuoteDataStore.edit {
             it[QUOTE_ID] = quoteEntity.id
             it[QUOTE_TEXT] = quoteEntity.text
             it[QUOTE_AUTHOR] = quoteEntity.author
@@ -33,7 +33,7 @@ class DailyQuoteDataStore(private val context: Context) {
 
     }
 
-    fun getFromDataStore() = context.dataStore.data.map {
+    fun getFromDataStore() = context.dailyQuoteDataStore.data.map {
         Log.d("IS_QUOTE_EMPTY", "id on get: ${it[QUOTE_ID]}")
         QuoteEntity(
             id = it[QUOTE_ID] ?: -1,
