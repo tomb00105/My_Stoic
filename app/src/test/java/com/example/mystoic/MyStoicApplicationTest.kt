@@ -1,8 +1,7 @@
 package com.example.mystoic
 
 import com.example.mystoic.data.AppContainer
-import com.example.mystoic.data.AppDataContainer
-import org.junit.Assert.*
+import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Test
 

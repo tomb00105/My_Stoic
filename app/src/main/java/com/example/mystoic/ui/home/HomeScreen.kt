@@ -22,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.mystoic.notifications.AlarmUtils
 import com.example.mystoic.ui.AppViewModelProvider
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -36,12 +35,18 @@ fun HomeScreen(
     viewModel: HomeScreenViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val homeScreenUiState by viewModel.homeScreenUiState.collectAsState(initial = HomeScreenUiState())
+    val dailyQuoteDateUiState by viewModel.dailyQuoteDateUiState.collectAsState(initial = DailyQuoteDateUiState())
     val context = LocalContext.current
     val notificationsPermissionState = rememberPermissionState(
         Manifest.permission.POST_NOTIFICATIONS
     )
     val requestButtonIntent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
     requestButtonIntent.data = Uri.parse("package:" + context.packageName)
+
+    if (dailyQuoteDateUiState.dailyQuoteDate != dailyQuoteDateUiState.currentDate) {
+        viewModel.setNewDailyQuote()
+    }
+
     Column(modifier = modifier.fillMaxSize()) {
         Row(
             modifier = Modifier

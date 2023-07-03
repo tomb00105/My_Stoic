@@ -76,7 +76,7 @@ fun RequestPermissions(
                 ) {
                     Text(text = "Are you sure you want to deny this permission?\n\nYou will not be" +
                             " able to receive daily quote notifications.\n")
-                    Row() {
+                    Row {
                         Button(onClick = {
                             viewModel.saveToDataStore(true)
                             navController.navigate(TopLevelScreens.Main.route)

@@ -14,13 +14,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.example.mystoic.MyStoicApplication
 import com.example.mystoic.R
 import com.example.mystoic.data.PermissionsDataStore
 import com.example.mystoic.ui.MainScreen
 import com.example.mystoic.ui.home.HomeScreen
+import com.example.mystoic.ui.journal.JournalEntryScreen
 import com.example.mystoic.ui.journal.JournalScreen
 import com.example.mystoic.ui.permission.RequestPermissions
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -33,7 +36,11 @@ sealed class TopLevelScreens(val route: String, @StringRes val resourceId: Int) 
     object Permissions: TopLevelScreens("Permission", R.string.permission_screen_route)
 }
 
-sealed class BottomNavigationScreens(val route: String, @StringRes val resourceId: Int, val icon: ImageVector) {
+sealed class BottomNavigationScreens(
+    val route: String,
+    @StringRes val resourceId: Int,
+    val icon: ImageVector
+    ) {
     object Home : BottomNavigationScreens("Home", R.string.home_screen_route, Icons.Filled.Home)
     object Journal : BottomNavigationScreens("Journal", R.string.journal_screen_route, Icons.Filled.Edit)
 }
@@ -53,8 +60,16 @@ fun MainNavHost(
         }
         composable(route = BottomNavigationScreens.Journal.route) {
             JournalScreen(
-                navigateToHome = {},
+                navigateToEntry = { navController.navigate("journalEntry/{$it}")}
             )
+        }
+        composable(
+            route = "journalEntry/{entryDate}",
+            arguments = listOf(navArgument("entryDate") {
+                type = NavType.StringType
+            })
+        ) { backStackEntry ->
+            JournalEntryScreen(entryDate = backStackEntry.arguments?.getString("entryDate"))
         }
     }
 }

@@ -5,8 +5,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-// Setup for quotes database
-@Database(entities = [QuoteEntity::class], version = 1, exportSchema = false)
+@Database(
+    entities = [QuoteEntity::class, FavouriteEntity::class, JournalEntity::class],
+    version = 1,
+    exportSchema = true
+)
 abstract class QuoteDatabase : RoomDatabase() {
     abstract fun quoteDao() : QuoteDao
 
@@ -23,6 +26,7 @@ abstract class QuoteDatabase : RoomDatabase() {
                     QuoteDatabase::class.java,
                     "quotes_database"
                 )
+                    .fallbackToDestructiveMigration()
                     .createFromAsset("database/quotes_database.db")
                     .build()
                     .also {

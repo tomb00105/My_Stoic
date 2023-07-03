@@ -5,17 +5,21 @@ import android.app.Application
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.icu.util.Calendar
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.mystoic.MyStoicApplication
 import com.example.mystoic.R
+import com.example.mystoic.data.DailyQuoteRepository
 import com.example.mystoic.data.QuoteDatabaseRepository
 import com.example.mystoic.data.QuoteEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class DailyQuoteAlarmReceiver : BroadcastReceiver() {
 
@@ -24,12 +28,21 @@ class DailyQuoteAlarmReceiver : BroadcastReceiver() {
         val application = context.applicationContext as Application
         val appContainer = (application as MyStoicApplication).container
         val quoteDatabaseRepository = appContainer.quoteDatabaseRepository
+        val dailyQuoteRepository = appContainer.dailyQuoteRepository
 
         CoroutineScope(Dispatchers.IO).launch {
-            val randomQuote = getRandomQuote(quoteDatabaseRepository)
-            val notificationBuilder = buildDailyQuoteNotification(context, randomQuote)
-            saveNewDailyQuote(context, randomQuote)
+            val dailyQuote : QuoteEntity
+            if (dailyQuoteDateIsToday(dailyQuoteRepository)) {
+                dailyQuote = dailyQuoteRepository.getDailyQuoteEntityStream().first()
+            }
+            else {
+                dailyQuote = getRandomQuote(quoteDatabaseRepository)
+                saveNewDailyQuote(dailyQuoteRepository, dailyQuote)
+            }
+            val notificationBuilder = buildDailyQuoteNotification(context, dailyQuote)
             pushDailyQuoteNotification(context, notificationBuilder)
+            val alarm = AlarmUtils(context)
+            alarm.initRepeatingAlarm()
         }
     }
 
@@ -54,11 +67,18 @@ class DailyQuoteAlarmReceiver : BroadcastReceiver() {
         }
     }
 
-    private suspend fun saveNewDailyQuote(context: Context, quoteEntity: QuoteEntity) {
-        val application = context.applicationContext as Application
-        val appContainer = (application as MyStoicApplication).container
-        val dailyQuoteRepository = appContainer.dailyQuoteRepository
+    private suspend fun saveNewDailyQuote(dailyQuoteRepository: DailyQuoteRepository, quoteEntity: QuoteEntity) {
 
         dailyQuoteRepository.saveNewDailyQuote(quoteEntity)
+    }
+
+    private suspend fun dailyQuoteDateIsToday(dailyQuoteRepository: DailyQuoteRepository) : Boolean {
+        val dailyQuoteDate = dailyQuoteRepository.getDailyQuoteDateStream().first()
+
+        val calendar = Calendar.getInstance()
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val currentDate = dateFormat.format(calendar.time)
+
+        return dailyQuoteDate == currentDate
     }
 }

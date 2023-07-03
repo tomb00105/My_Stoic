@@ -1,6 +1,5 @@
 package com.example.mystoic
 
-import android.Manifest
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -17,12 +16,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.mystoic.navigation.BottomNavigationScreens
-import com.example.mystoic.navigation.MainNavHost
 import com.example.mystoic.navigation.TopLevelNavHost
-import com.example.mystoic.navigation.TopLevelScreens
-import com.example.mystoic.ui.MainScreen
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.rememberPermissionState
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable

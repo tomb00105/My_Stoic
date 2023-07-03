@@ -7,11 +7,10 @@ import com.example.mystoic.data.QuoteDatabase
 import com.example.mystoic.data.QuoteDatabaseRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
-
-import org.junit.Test
-
-import org.junit.Assert.*
+import org.junit.Assert.assertNotEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
+import org.junit.Test
 
 class QuoteDatabaseRepositoryTest {
     private val numberOfQuotes = 1774
