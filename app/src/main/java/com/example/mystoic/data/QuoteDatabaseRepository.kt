@@ -12,7 +12,7 @@ interface QuoteDatabaseRepository {
 
     fun getAllJournalEntriesStream(): Flow<List<JournalEntity>>
 
-    fun getSingleJournalEntryStream(date: String): Flow<JournalEntity>
+    fun getSingleJournalTextStream(date: String): Flow<String>
 
     suspend fun insertFavourite(quoteEntity: QuoteEntity)
 
@@ -38,7 +38,7 @@ class OfflineQuoteDatabaseRepository(private val quoteDao: QuoteDao) : QuoteData
     override fun getAllJournalEntriesStream(): Flow<List<JournalEntity>> =
         quoteDao.getAllJournalEntries()
 
-    override fun getSingleJournalEntryStream(date: String): Flow<JournalEntity> =
+    override fun getSingleJournalTextStream(date: String): Flow<String> =
         quoteDao.getSingleJournalEntry(date)
 
     override suspend fun insertFavourite(quoteEntity: QuoteEntity) =

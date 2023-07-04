@@ -43,6 +43,6 @@ interface QuoteDao {
     @Query("SELECT * FROM Journal ORDER BY date DESC")
     fun getAllJournalEntries(): Flow<List<JournalEntity>>
 
-    @Query("SELECT * FROM JOURNAL WHERE :date == date")
-    fun getSingleJournalEntry(date: String): Flow<JournalEntity>
+    @Query("SELECT text FROM JOURNAL WHERE :date == date")
+    fun getSingleJournalEntry(date: String): Flow<String>
 }

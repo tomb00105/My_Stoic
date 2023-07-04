@@ -60,14 +60,16 @@ fun MainNavHost(
         }
         composable(route = BottomNavigationScreens.Journal.route) {
             JournalScreen(
-                navigateToEntry = { navController.navigate("journalEntry/{$it}")}
+                navigateToEntry = { navController.navigate("journalEntry/$it")}
             )
         }
         composable(
             route = "journalEntry/{entryDate}",
-            arguments = listOf(navArgument("entryDate") {
-                type = NavType.StringType
-            })
+            arguments = listOf(
+                navArgument("entryDate") {
+                    type = NavType.StringType
+                },
+            )
         ) { backStackEntry ->
             JournalEntryScreen(entryDate = backStackEntry.arguments?.getString("entryDate"))
         }
