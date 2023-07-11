@@ -1,6 +1,7 @@
 package com.example.mystoic.ui.journal
 
 import android.icu.util.Calendar
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,19 +27,17 @@ fun JournalScreen(
     val journalScreenUiState = viewModel.journalScreenUiState.collectAsState(initial = JournalScreenUiState())
     val journalEntries = journalScreenUiState.value.journalEntries
 
-    Text("Journal")
     LazyColumn() {
-        if (journalEntries.isEmpty() || journalEntries[0].date != viewModel.getCurrentDateAsString()) {
-            viewModel.saveNewJournalEntry()
-        }
-        items(journalScreenUiState.value.journalEntries) { entry ->
-            ListItem(
-                headlineContent = { Text(entry.date) },
-                supportingContent = { Text(entry.text ?: "")},
-                modifier = Modifier.clickable {
-                    navigateToEntry(entry.date)
-                },
-            )
+        if (journalEntries.isNotEmpty()) {
+            items(journalScreenUiState.value.journalEntries) { entry ->
+                ListItem(
+                    headlineContent = { Text(entry.date) },
+                    supportingContent = { Text(entry.text ?: "")},
+                    modifier = Modifier.clickable {
+                        navigateToEntry(entry.date)
+                    },
+                )
+            }
         }
     }
 }

@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.mystoic.MyStoicApplication
+import com.example.mystoic.ui.favourites.FavouritesViewModel
 import com.example.mystoic.ui.home.HomeScreenViewModel
 import com.example.mystoic.ui.journal.JournalEntryScreenViewModel
 import com.example.mystoic.ui.journal.JournalScreenViewModel
@@ -35,6 +36,11 @@ object AppViewModelProvider {
         initializer {
             JournalEntryScreenViewModel(
                 this.createSavedStateHandle(),
+                myStoicApplication().container.quoteDatabaseRepository
+            )
+        }
+        initializer {
+            FavouritesViewModel(
                 myStoicApplication().container.quoteDatabaseRepository
             )
         }

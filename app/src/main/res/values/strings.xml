@@ -10,4 +10,6 @@
     <string name="main_screen_route">Main</string>
     <string name="permission_screen_route">Permission</string>
     <string name="journal_entry_screen_route">JournalEntry</string>
+    <string name="entry_screen_route">journalEntry</string>
+    <string name="favourites_screen_route">Favourites</string>
 </resources>

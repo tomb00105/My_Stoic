@@ -8,7 +8,7 @@ interface QuoteDatabaseRepository {
 
     fun getRandomQuoteStream(): Flow<QuoteEntity>
 
-    fun getAllFavouritesStream(id: Int): Flow<List<QuoteEntity>>
+    fun getAllFavouritesStream(): Flow<List<QuoteEntity>>
 
     fun getAllJournalEntriesStream(): Flow<List<JournalEntity>>
 
@@ -32,8 +32,8 @@ class OfflineQuoteDatabaseRepository(private val quoteDao: QuoteDao) : QuoteData
     override fun getRandomQuoteStream(): Flow<QuoteEntity> =
         quoteDao.getRandomQuote()
 
-    override fun getAllFavouritesStream(id: Int): Flow<List<QuoteEntity>> =
-        quoteDao.getAllFavourites(id)
+    override fun getAllFavouritesStream(): Flow<List<QuoteEntity>> =
+        quoteDao.getAllFavourites()
 
     override fun getAllJournalEntriesStream(): Flow<List<JournalEntity>> =
         quoteDao.getAllJournalEntries()

@@ -26,7 +26,7 @@ abstract class QuoteDatabase : RoomDatabase() {
                     QuoteDatabase::class.java,
                     "quotes_database"
                 )
-                    .fallbackToDestructiveMigration()
+                    .fallbackToDestructiveMigrationOnDowngrade()
                     .createFromAsset("database/quotes_database.db")
                     .build()
                     .also {

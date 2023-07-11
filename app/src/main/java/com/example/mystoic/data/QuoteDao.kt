@@ -37,8 +37,8 @@ interface QuoteDao {
     @Query("SELECT * FROM Quotes ORDER BY RANDOM() LIMIT 1")
     fun getRandomQuote(): Flow<QuoteEntity>
 
-    @Query("SELECT * FROM Quotes WHERE :id IN Favourites")
-    fun getAllFavourites(id: Int): Flow<List<QuoteEntity>>
+    @Query("SELECT * FROM Quotes JOIN Favourites ON Quotes.id = Favourites.id")
+    fun getAllFavourites(): Flow<List<QuoteEntity>>
 
     @Query("SELECT * FROM Journal ORDER BY date DESC")
     fun getAllJournalEntries(): Flow<List<JournalEntity>>

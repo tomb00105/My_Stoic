@@ -6,13 +6,19 @@ import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -21,7 +27,7 @@ import androidx.navigation.navArgument
 import com.example.mystoic.MyStoicApplication
 import com.example.mystoic.R
 import com.example.mystoic.data.PermissionsDataStore
-import com.example.mystoic.ui.MainScreen
+import com.example.mystoic.ui.favourites.FavouritesScreen
 import com.example.mystoic.ui.home.HomeScreen
 import com.example.mystoic.ui.journal.JournalEntryScreen
 import com.example.mystoic.ui.journal.JournalScreen
@@ -36,13 +42,23 @@ sealed class TopLevelScreens(val route: String, @StringRes val resourceId: Int) 
     object Permissions: TopLevelScreens("Permission", R.string.permission_screen_route)
 }
 
-sealed class BottomNavigationScreens(
+sealed class MainNavScreens(
     val route: String,
     @StringRes val resourceId: Int,
-    val icon: ImageVector
-    ) {
-    object Home : BottomNavigationScreens("Home", R.string.home_screen_route, Icons.Filled.Home)
-    object Journal : BottomNavigationScreens("Journal", R.string.journal_screen_route, Icons.Filled.Edit)
+    val icon: ImageVector,
+) {
+    object Home : MainNavScreens("Home", R.string.home_screen_route, Icons.Filled.Home)
+    object Journal : MainNavScreens("Journal", R.string.journal_screen_route, Icons.Filled.Edit)
+    object  Favourites: MainNavScreens("Favourites", R.string.favourites_screen_route, Icons.Filled.Star)
+}
+
+sealed class MainSubScreen(
+    val route: String,
+    @StringRes val resourceId: Int
+) {
+    object Home: MainSubScreen(MainNavScreens.Home.route, MainNavScreens.Home.resourceId)
+    object Journal: MainSubScreen(MainNavScreens.Journal.route, MainNavScreens.Journal.resourceId)
+    object Entry: MainSubScreen("journalEntry", R.string.entry_screen_route)
 }
 
 @Composable
@@ -52,30 +68,36 @@ fun MainNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = BottomNavigationScreens.Home.route,
+        startDestination = MainNavScreens.Home.route,
         modifier = modifier,
     ) {
-        composable(route = BottomNavigationScreens.Home.route) {
+        composable(route = MainNavScreens.Home.route) {
             HomeScreen()
         }
-        composable(route = BottomNavigationScreens.Journal.route) {
+        composable(route = MainNavScreens.Journal.route) {
             JournalScreen(
-                navigateToEntry = { navController.navigate("journalEntry/$it")}
+                navigateToEntry = { navController.navigate("${MainSubScreen.Entry.route}/$it")}
             )
         }
+        composable(route = MainNavScreens.Favourites.route) {
+            FavouritesScreen()
+        }
         composable(
-            route = "journalEntry/{entryDate}",
+            route = "${MainSubScreen.Entry.route}/{entryDate}",
             arguments = listOf(
                 navArgument("entryDate") {
                     type = NavType.StringType
-                },
-            )
+            })
         ) { backStackEntry ->
-            JournalEntryScreen(entryDate = backStackEntry.arguments?.getString("entryDate"))
+            JournalEntryScreen(
+                entryDate = backStackEntry.arguments?.getString("entryDate"),
+                navController = navController
+            )
         }
     }
 }
 
+/*
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun TopLevelNavHost(
@@ -121,4 +143,4 @@ fun getStartScreen(notificationsPermissionState: PermissionState, dataStore: Per
         } else {
             return TopLevelScreens.Main.route
         }
-}
+}*/

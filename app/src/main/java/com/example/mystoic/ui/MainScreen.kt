@@ -8,20 +8,18 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.mystoic.MyStoicBottomNavigation
-import com.example.mystoic.navigation.BottomNavigationScreens
+import com.example.mystoic.navigation.MainNavScreens
 import com.example.mystoic.navigation.MainNavHost
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
-@OptIn(ExperimentalPermissionsApi::class)
-@Composable
+/*@Composable
 fun MainScreen(
     windowSizeClass: WindowSizeClass,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
 ) {
     val bottomNavigationItems = listOf(
-        BottomNavigationScreens.Home,
-        BottomNavigationScreens.Journal
+        MainNavScreens.Home,
+        MainNavScreens.Journal
     )
     Scaffold(
         bottomBar = {
@@ -30,5 +28,5 @@ fun MainScreen(
     ) { innerPadding ->
         MainNavHost(navController, modifier = Modifier.padding(innerPadding))
     }
-}
+}*/
 
