@@ -1,11 +1,17 @@
 package com.example.mystoic.ui.home
 
 import android.icu.util.Calendar
+import android.provider.MediaStore.Audio.Radio
 import android.util.Log
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mystoic.data.DailyQuoteRepository
+import com.example.mystoic.data.FavouriteEntity
 import com.example.mystoic.data.QuoteDatabaseRepository
+import com.example.mystoic.data.QuoteEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
@@ -26,16 +32,29 @@ class HomeScreenViewModel(
                 setNewDailyQuote()
             }
         }
+        setNewRandomQuote()
     }
+
+    val currentRandomQuote = mutableStateOf(QuoteEntity(-1, "", ""))
 
     val homeScreenUiState: Flow<HomeScreenUiState> =
         dailyQuoteRepository.getDailyQuoteEntityStream().map {
-            HomeScreenUiState(it.text, it.author)
+            HomeScreenUiState(it.id, it.text, it.author)
         }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
                 initialValue = HomeScreenUiState()
+            )
+
+    val favouritesUiState: Flow<FavouritesUiState> =
+        quoteDatabaseRepository.getAllFavouritesIdStream().map {
+            FavouritesUiState(it)
+        }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+                initialValue = FavouritesUiState()
             )
 
     val dailyQuoteDateUiState: Flow<DailyQuoteDateUiState> =
@@ -57,21 +76,62 @@ class HomeScreenViewModel(
 
     fun setNewDailyQuote() {
         viewModelScope.launch {
-            val newDailyQuote = quoteDatabaseRepository.getRandomQuoteStream().first()
+            val newDailyQuote =
+                quoteDatabaseRepository.getRandomQuoteStream().first()
             dailyQuoteRepository.saveNewDailyQuote(newDailyQuote)
         }
     }
+
+    fun setNewRandomQuote() {
+        viewModelScope.launch {
+            val newRandomQuote =
+                quoteDatabaseRepository.getRandomQuoteStream().first()
+            currentRandomQuote.value = newRandomQuote
+        }
+    }
+
+    fun saveFavourite(isDailyQuote: Boolean) {
+        viewModelScope.launch {
+            val newFavourite = FavouriteEntity(homeScreenUiState.first().id)
+            quoteDatabaseRepository.insertFavourite(newFavourite)
+        }
+    }
+
+    fun deleteFavourite(isDailyQuote: Boolean) {
+        viewModelScope.launch {
+            val favouriteToDelete = FavouriteEntity(homeScreenUiState.first().id)
+            quoteDatabaseRepository.deleteFavourite(favouriteToDelete)
+        }
+    }
+
+    /*fun getRandomQuote() {
+        viewModelScope.launch {
+            quoteDatabaseRepository.getRandomQuoteStream()
+        }
+    }*/
+
     companion object {
         private const val TIMEOUT_MILLIS = 5_000L
     }
 }
 
 data class HomeScreenUiState(
+    val id: Int = -1,
     val dailyQuoteText: String = "",
     val dailyQuoteAuthor: String = "",
 )
 
-data class DailyQuoteDateUiState(
+data class FavouritesUiState (
+    val favourites: List<Int> = emptyList()
+)
+
+data class DailyQuoteDateUiState (
     val dailyQuoteDate: String = "",
     val currentDate: String = "",
+)
+
+data class RandomQuoteUiState (
+    val id: Int = -1,
+    val quoteText: String = "",
+    val quoteAuthor: String = ""
 )

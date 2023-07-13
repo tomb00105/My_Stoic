@@ -10,15 +10,17 @@ interface QuoteDatabaseRepository {
 
     fun getAllFavouritesStream(): Flow<List<QuoteEntity>>
 
+    fun getAllFavouritesIdStream(): Flow<List<Int>>
+
     fun getAllJournalEntriesStream(): Flow<List<JournalEntity>>
 
     fun getSingleJournalTextStream(date: String): Flow<String>
 
-    suspend fun insertFavourite(quoteEntity: QuoteEntity)
+    suspend fun insertFavourite(favouriteEntity: FavouriteEntity)
 
     suspend fun insertJournalEntry(journalEntity: JournalEntity)
 
-    suspend fun deleteFavourite(quoteEntity: QuoteEntity)
+    suspend fun deleteFavourite(favouriteEntity: FavouriteEntity)
 
     suspend fun deleteJournalEntry(journalEntity: JournalEntity)
 
@@ -35,14 +37,17 @@ class OfflineQuoteDatabaseRepository(private val quoteDao: QuoteDao) : QuoteData
     override fun getAllFavouritesStream(): Flow<List<QuoteEntity>> =
         quoteDao.getAllFavourites()
 
+    override fun getAllFavouritesIdStream(): Flow<List<Int>> =
+        quoteDao.getAllFavouritesId()
+
     override fun getAllJournalEntriesStream(): Flow<List<JournalEntity>> =
         quoteDao.getAllJournalEntries()
 
     override fun getSingleJournalTextStream(date: String): Flow<String> =
         quoteDao.getSingleJournalEntry(date)
 
-    override suspend fun insertFavourite(quoteEntity: QuoteEntity) =
-        quoteDao.insertFavourite(quoteEntity)
+    override suspend fun insertFavourite(favouriteEntity: FavouriteEntity) =
+        quoteDao.insertFavourite(favouriteEntity)
 
     override suspend fun insertJournalEntry(journalEntity: JournalEntity) =
         quoteDao.insertJournalEntry(journalEntity)
@@ -50,8 +55,8 @@ class OfflineQuoteDatabaseRepository(private val quoteDao: QuoteDao) : QuoteData
     override suspend fun updateJournalEntry(journalEntity: JournalEntity) =
         quoteDao.updateJournalEntry(journalEntity)
 
-    override suspend fun deleteFavourite(quoteEntity: QuoteEntity) =
-        quoteDao.deleteFavourite(quoteEntity)
+    override suspend fun deleteFavourite(favouriteEntity: FavouriteEntity) =
+        quoteDao.deleteFavourite(favouriteEntity)
 
     override suspend fun deleteJournalEntry(journalEntity: JournalEntity) =
         quoteDao.deleteJournalEntry(journalEntity)

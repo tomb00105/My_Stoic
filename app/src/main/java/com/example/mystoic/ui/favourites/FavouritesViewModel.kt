@@ -3,6 +3,7 @@ package com.example.mystoic.ui.favourites
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mystoic.data.FavouriteEntity
 import com.example.mystoic.data.QuoteDatabaseRepository
 import com.example.mystoic.data.QuoteEntity
 import kotlinx.coroutines.flow.Flow
@@ -27,8 +28,9 @@ class FavouritesViewModel(
             )
 
     fun deleteFavourite(quoteEntity: QuoteEntity) {
+        val favouriteToDelete = FavouriteEntity(quoteEntity.id)
         viewModelScope.launch {
-            quoteDatabaseRepository.deleteFavourite(quoteEntity)
+            quoteDatabaseRepository.deleteFavourite(favouriteToDelete)
         }
     }
 }

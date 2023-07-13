@@ -17,13 +17,13 @@ interface QuoteDao {
     suspend fun insertQuote(quoteEntity : QuoteEntity)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertFavourite(quoteEntity: QuoteEntity)
+    suspend fun insertFavourite(favouriteEntity: FavouriteEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertJournalEntry(journalEntity: JournalEntity)
 
     @Delete
-    suspend fun deleteFavourite(quoteEntity: QuoteEntity)
+    suspend fun deleteFavourite(favouriteEntity: FavouriteEntity)
 
     @Delete
     suspend fun deleteJournalEntry(journalEntity: JournalEntity)
@@ -39,6 +39,9 @@ interface QuoteDao {
 
     @Query("SELECT * FROM Quotes JOIN Favourites ON Quotes.id = Favourites.id")
     fun getAllFavourites(): Flow<List<QuoteEntity>>
+
+    @Query("SELECT id FROM Favourites")
+    fun getAllFavouritesId(): Flow<List<Int>>
 
     @Query("SELECT * FROM Journal ORDER BY date DESC")
     fun getAllJournalEntries(): Flow<List<JournalEntity>>
