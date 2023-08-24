@@ -11,6 +11,8 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import com.example.mystoic.notifications.AlarmUtils
+import com.example.mystoic.notifications.DailyQuoteNotificationChannel
+import com.example.mystoic.notifications.JournalNotificationChannel
 import com.example.mystoic.ui.theme.MyStoicTheme
 
 class MainActivity : ComponentActivity() {
@@ -27,7 +29,8 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val alarm = AlarmUtils(this)
-                    alarm.initRepeatingAlarm()
+                    alarm.initRepeatingAlarm(DailyQuoteNotificationChannel.dailyQuoteRequestCode)
+                    alarm.initRepeatingAlarm(JournalNotificationChannel.journalRequestCode)
                     MyStoicApp(windowSizeClass = windowSizeClass)
                 }
             }

@@ -35,6 +35,7 @@
             </intent-filter>
         </receiver>
         <receiver android:name=".notifications.DailyQuoteAlarmReceiver"/>
+        <receiver android:name=".notifications.JournalReminderAlarmReceiver"/>
     </application>
 
 </manifest>

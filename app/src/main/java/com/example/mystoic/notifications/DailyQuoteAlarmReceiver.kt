@@ -2,6 +2,7 @@ package com.example.mystoic.notifications
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -9,6 +10,7 @@ import android.icu.util.Calendar
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.example.mystoic.MainActivity
 import com.example.mystoic.MyStoicApplication
 import com.example.mystoic.R
 import com.example.mystoic.data.DailyQuoteRepository
@@ -42,18 +44,23 @@ class DailyQuoteAlarmReceiver : BroadcastReceiver() {
             val notificationBuilder = buildDailyQuoteNotification(context, dailyQuote)
             pushDailyQuoteNotification(context, notificationBuilder)
             val alarm = AlarmUtils(context)
-            alarm.initRepeatingAlarm()
+            alarm.initRepeatingAlarm(DailyQuoteNotificationChannel.dailyQuoteRequestCode)
         }
     }
 
 
     private fun buildDailyQuoteNotification(context: Context, dailyQuote: QuoteEntity) : NotificationCompat.Builder {
+        val intent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
         return NotificationCompat.Builder(context, "Daily Quote Channel ID")
             .setSmallIcon(R.drawable.ic_launcher_foreground_stoic)
             .setContentTitle(context.getString(R.string.daily_quote))
             .setContentText("${dailyQuote.text}\n- ${dailyQuote.author}")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(pendingIntent)
     }
     private suspend fun getRandomQuote(quoteDatabaseRepository: QuoteDatabaseRepository) : QuoteEntity {
         val quoteFlow = quoteDatabaseRepository.getRandomQuoteStream()

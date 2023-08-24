@@ -1,46 +1,23 @@
 package com.example.mystoic.navigation
 
-import android.Manifest
-import android.app.Application
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.NavController
-import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.mystoic.MyStoicApplication
 import com.example.mystoic.R
-import com.example.mystoic.data.PermissionsDataStore
 import com.example.mystoic.ui.favourites.FavouritesScreen
 import com.example.mystoic.ui.home.HomeScreen
 import com.example.mystoic.ui.journal.JournalEntryScreen
 import com.example.mystoic.ui.journal.JournalScreen
-import com.example.mystoic.ui.permission.RequestPermissions
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionState
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
-
-sealed class TopLevelScreens(val route: String, @StringRes val resourceId: Int) {
-    object Main: TopLevelScreens("Main", R.string.main_screen_route)
-    object Permissions: TopLevelScreens("Permission", R.string.permission_screen_route)
-}
 
 sealed class MainNavScreens(
     val route: String,
@@ -52,13 +29,11 @@ sealed class MainNavScreens(
     object  Favourites: MainNavScreens("Favourites", R.string.favourites_screen_route, Icons.Filled.Star)
 }
 
-sealed class MainSubScreen(
+sealed class SubScreen(
     val route: String,
     @StringRes val resourceId: Int
 ) {
-    object Home: MainSubScreen(MainNavScreens.Home.route, MainNavScreens.Home.resourceId)
-    object Journal: MainSubScreen(MainNavScreens.Journal.route, MainNavScreens.Journal.resourceId)
-    object Entry: MainSubScreen("journalEntry", R.string.entry_screen_route)
+    object Entry: SubScreen("journalEntry", R.string.entry_screen_route)
 }
 
 @Composable
@@ -76,14 +51,14 @@ fun MainNavHost(
         }
         composable(route = MainNavScreens.Journal.route) {
             JournalScreen(
-                navigateToEntry = { navController.navigate("${MainSubScreen.Entry.route}/$it")}
+                navigateToEntry = { navController.navigate("${SubScreen.Entry.route}/$it")}
             )
         }
         composable(route = MainNavScreens.Favourites.route) {
             FavouritesScreen()
         }
         composable(
-            route = "${MainSubScreen.Entry.route}/{entryDate}",
+            route = "${SubScreen.Entry.route}/{entryDate}",
             arguments = listOf(
                 navArgument("entryDate") {
                     type = NavType.StringType

@@ -32,9 +32,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mystoic.R
 import com.example.mystoic.ui.AppViewModelProvider
+import com.example.mystoic.ui.permission.NotificationsRequest
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -65,12 +67,13 @@ fun HomeScreen(
         viewModel.setNewDailyQuote()
     }
 
+    NotificationsRequest()
+
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -117,26 +120,12 @@ fun HomeScreen(
                                 Text(text = "Allow Notifications")
                             }
                         }
-                        Row() {
-                            IconButton(onClick = { /*TODO*/ }) {
-                                Image(imageVector = Icons.Filled.Share, contentDescription = "Share quote")
-                            }
-                            IconButton(
-                                onClick = {
-                                    if (dailyQuoteIsFavourite.value) {
-                                        viewModel.deleteFavourite(true)
-                                    } else {
-                                        viewModel.saveFavourite(true)
-                                    }
-                                }
-                            ) {
-                                if (dailyQuoteIsFavourite.value) {
-                                    Image(imageVector = Icons.Filled.Star, contentDescription = "Favourite")
-                                } else {
-                                    Image(imageVector = Icons.TwoTone.Star, contentDescription = "Add to favourites")
-                                }
-                            }
-                        }
+                        SharingBar(
+                            quoteText = homeScreenUiState.dailyQuoteText,
+                            quoteAuthor = homeScreenUiState.dailyQuoteAuthor,
+                            isFavourite = dailyQuoteIsFavourite.value,
+                            viewModel = viewModel
+                        )
                     }
                 }
             }
@@ -149,15 +138,72 @@ fun HomeScreen(
             Card(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(8.dp)
+                    .padding(8.dp),
             ) {
-                Text(text = randomQuote.text)
-                Button(onClick = {
-                    viewModel.setNewRandomQuote()
-                }
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(text = "Get new random quote")
+                    Text(
+                        text = randomQuote.text,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(4.dp)
+                    )
+                    Button(
+                        onClick = {
+                            viewModel.setNewRandomQuote()
+                        },
+                        modifier = Modifier.padding(4.dp)
+                    ) {
+                        Text(text = "Get new random quote")
+                    }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun SharingBar(
+    quoteText: String,
+    quoteAuthor: String,
+    isFavourite: Boolean,
+    viewModel: HomeScreenViewModel,
+    modifier: Modifier = Modifier,
+) {
+    val context = LocalContext.current
+
+    Row(modifier = modifier) {
+        IconButton(onClick = {
+            val sendIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(
+                    Intent.EXTRA_TEXT,
+                    "$quoteText\n\n-$quoteAuthor")
+                type = "text/plain"
+            }
+
+            val shareIntent = Intent.createChooser(sendIntent, null)
+            startActivity(context, shareIntent, null)
+        }) {
+            Image(imageVector = Icons.Filled.Share, contentDescription = "Share quote")
+        }
+        IconButton(
+            onClick = {
+                if (isFavourite) {
+                    viewModel.deleteFavourite(true)
+                } else {
+                    viewModel.saveFavourite(true)
+                }
+            }
+        ) {
+            if (isFavourite) {
+                Image(imageVector = Icons.Filled.Star, contentDescription = "Favourite")
+            } else {
+                Image(imageVector = Icons.TwoTone.Star, contentDescription = "Add to favourites")
             }
         }
     }

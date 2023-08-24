@@ -104,12 +104,6 @@ class HomeScreenViewModel(
         }
     }
 
-    /*fun getRandomQuote() {
-        viewModelScope.launch {
-            quoteDatabaseRepository.getRandomQuoteStream()
-        }
-    }*/
-
     companion object {
         private const val TIMEOUT_MILLIS = 5_000L
     }

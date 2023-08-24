@@ -6,26 +6,28 @@ import android.content.Context
 import android.os.Build
 import androidx.core.app.ComponentActivity
 
-object DailyQuoteNotificationChannel {
-    private const val channelId = "Daily Quote Channel ID"
-    private const val channelName = "Daily Quote"
-    private const val channelDescription = "Notification for a random daily quote at around 8am every day."
+object JournalNotificationChannel {
+    private const val channelId = "Journal Channel ID"
+    private const val channelName = "Journal Reminder"
+    private const val channelDescription = "Notification to write in your journal at 8pm every day."
     private const val importance = NotificationManager.IMPORTANCE_DEFAULT
-    const val dailyQuoteRequestCode = 100
+    const val journalRequestCode = 200
 
     fun createNotificationChannel(context: Context) {
         if (apiLevelAtOrAbove26()) {
-            val dailyQuoteChannel = NotificationChannel(
+            val journalChannel = NotificationChannel(
                 channelId,
                 channelName,
                 importance,
             )
 
-            dailyQuoteChannel.apply { description = channelDescription }
+            journalChannel.apply { description =
+                channelDescription
+            }
 
             val notificationManager = getNotificationManager(context)
 
-            notificationManager.createNotificationChannel(dailyQuoteChannel)
+            notificationManager.createNotificationChannel(journalChannel)
         }
     }
 
