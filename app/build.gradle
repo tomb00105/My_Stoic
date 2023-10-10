@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.mystoic'
+    namespace 'com.momento.mystoic'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.example.mystoic"
+        applicationId "com.momento.mystoic"
         minSdk 24
         targetSdk 34
         versionCode 1
