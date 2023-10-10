@@ -39,7 +39,9 @@ class JournalScreenViewModel(
             )
 
     private fun saveNewJournalEntry() {
-        val newJournalEntry = JournalEntity(getCurrentDateAsString(), "Test")
+        val newJournalEntry = JournalEntity(getCurrentDateAsString(), "Put down your thoughts about the day here." +
+                " Think about the four stoic pillars: Wisdom, Courage, Temperance and Justice. Or reflect on today's quote." +
+                " There is no right or wrong.")
         viewModelScope.launch {
             quoteDatabaseRepository.insertJournalEntry(newJournalEntry)
         }
