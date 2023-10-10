@@ -91,15 +91,25 @@ class HomeScreenViewModel(
     }
 
     fun saveFavourite(isDailyQuote: Boolean) {
+        var newFavourite: FavouriteEntity
         viewModelScope.launch {
-            val newFavourite = FavouriteEntity(homeScreenUiState.first().id)
+            newFavourite = if (isDailyQuote) {
+                FavouriteEntity(homeScreenUiState.first().id)
+            } else {
+                FavouriteEntity(currentRandomQuote.value.id)
+            }
             quoteDatabaseRepository.insertFavourite(newFavourite)
         }
     }
 
     fun deleteFavourite(isDailyQuote: Boolean) {
+        var favouriteToDelete: FavouriteEntity
         viewModelScope.launch {
-            val favouriteToDelete = FavouriteEntity(homeScreenUiState.first().id)
+            favouriteToDelete = if (isDailyQuote) {
+                FavouriteEntity(homeScreenUiState.first().id)
+            } else {
+                FavouriteEntity(currentRandomQuote.value.id)
+            }
             quoteDatabaseRepository.deleteFavourite(favouriteToDelete)
         }
     }
@@ -122,10 +132,4 @@ data class FavouritesUiState (
 data class DailyQuoteDateUiState (
     val dailyQuoteDate: String = "",
     val currentDate: String = "",
-)
-
-data class RandomQuoteUiState (
-    val id: Int = -1,
-    val quoteText: String = "",
-    val quoteAuthor: String = ""
 )

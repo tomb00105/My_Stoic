@@ -7,8 +7,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import com.example.mystoic.notifications.DailyQuoteNotificationChannel.dailyQuoteRequestCode
-import com.example.mystoic.notifications.JournalNotificationChannel.journalRequestCode
 import java.util.Calendar
 
 class AlarmUtils(val context: Context) {
@@ -16,21 +14,23 @@ class AlarmUtils(val context: Context) {
     private var dailyQuoteAlarmIntent: PendingIntent
     private var journalAlarmIntent: PendingIntent
     private val dayInMillis = 86400000L
+    private val dailyQuoteAlarmHour = 8
+    private val journalAlarmHour = 20
 
     init {
         alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         dailyQuoteAlarmIntent = Intent(context, DailyQuoteAlarmReceiver::class.java).let { mIntent ->
             // if you want more than one notification use different requestCode
             // every notification need different requestCode
-            PendingIntent.getBroadcast(context, dailyQuoteRequestCode, mIntent, PendingIntent.FLAG_MUTABLE)
+            PendingIntent.getBroadcast(context, AlarmRequestCode.DAILY_QUOTE.requestCode, mIntent, PendingIntent.FLAG_MUTABLE)
         }
         journalAlarmIntent = Intent(context, JournalReminderAlarmReceiver::class.java).let { mIntent ->
-            PendingIntent.getBroadcast(context, journalRequestCode, mIntent, PendingIntent.FLAG_MUTABLE)
+            PendingIntent.getBroadcast(context, AlarmRequestCode.JOURNAL.requestCode, mIntent, PendingIntent.FLAG_MUTABLE)
         }
     }
 
     @SuppressLint("MissingPermission")
-    fun initRepeatingAlarm(requestCode: Int) {
+    fun initRepeatingAlarm(requestCode: AlarmRequestCode) {
         val bootReceiver = ComponentName(context, BootReceiver::class.java)
         if (context.packageManager.getComponentEnabledSetting(bootReceiver) !=
             PackageManager.COMPONENT_ENABLED_STATE_ENABLED
@@ -43,14 +43,13 @@ class AlarmUtils(val context: Context) {
         }
 
         val calendar: Calendar = Calendar.getInstance().apply {
-            if (requestCode == dailyQuoteRequestCode)
-            {
-                set(Calendar.HOUR_OF_DAY, 8)
 
-            }
-            else {
-                set(Calendar.HOUR_OF_DAY, 20)
-            }
+            set(Calendar.HOUR_OF_DAY,
+                when (requestCode) {
+                    AlarmRequestCode.DAILY_QUOTE -> dailyQuoteAlarmHour
+                    AlarmRequestCode.JOURNAL -> journalAlarmHour
+                }
+            )
             set(Calendar.MINUTE, 0)
             set(Calendar.SECOND, 0)
         }
@@ -60,7 +59,10 @@ class AlarmUtils(val context: Context) {
         alarmMgr?.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
             alarmTime,
-            dailyQuoteAlarmIntent
+            when (requestCode) {
+                AlarmRequestCode.DAILY_QUOTE -> dailyQuoteAlarmIntent
+                AlarmRequestCode.JOURNAL -> journalAlarmIntent
+            }
         )
     }
 }

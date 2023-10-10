@@ -26,7 +26,7 @@ import java.util.Locale
 class DailyQuoteAlarmReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, content: Intent) {
-        Log.d("ALARM_RECEIVED", "Alarm was received!")
+        Log.d("ALARM_RECEIVED", "Alarm was received! Content:")
         val application = context.applicationContext as Application
         val appContainer = (application as MyStoicApplication).container
         val quoteDatabaseRepository = appContainer.quoteDatabaseRepository
@@ -44,7 +44,7 @@ class DailyQuoteAlarmReceiver : BroadcastReceiver() {
             val notificationBuilder = buildDailyQuoteNotification(context, dailyQuote)
             pushDailyQuoteNotification(context, notificationBuilder)
             val alarm = AlarmUtils(context)
-            alarm.initRepeatingAlarm(DailyQuoteNotificationChannel.dailyQuoteRequestCode)
+            alarm.initRepeatingAlarm(AlarmRequestCode.DAILY_QUOTE)
         }
     }
 

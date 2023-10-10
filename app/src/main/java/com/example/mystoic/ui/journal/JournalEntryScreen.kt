@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -64,11 +65,16 @@ fun JournalEntryScreen(
                 .padding(innerPadding)
         ) {
             Card(
-                modifier
+                colors = CardDefaults.cardColors(
+                    MaterialTheme.colorScheme.primaryContainer
+                ),
+                elevation = CardDefaults.cardElevation(
+                    defaultElevation = 4.dp
+                ),
+                modifier = Modifier
                     .fillMaxSize()
                     .padding(8.dp)
             ) {
-                Text(text = entryDate ?: "INVALID DATE")
                 LazyColumn() {
                     item {
                         Box(modifier = Modifier.safeDrawingPadding()) {
@@ -78,7 +84,7 @@ fun JournalEntryScreen(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .padding(16.dp)
-                                    .background(color = MaterialTheme.colorScheme.surfaceVariant),
+                                    .background(color = MaterialTheme.colorScheme.surface),
                                 minLines = 15,
                             )
                         }
@@ -100,7 +106,7 @@ fun JournalEntryTopBar(
     TopAppBar(
         title = {
             Text(
-                "Journal Date: ${viewModel.entryDate}",
+                "Journal Date: ${viewModel.formattedEntryDate}",
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )

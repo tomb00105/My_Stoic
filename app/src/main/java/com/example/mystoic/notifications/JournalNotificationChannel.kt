@@ -11,7 +11,6 @@ object JournalNotificationChannel {
     private const val channelName = "Journal Reminder"
     private const val channelDescription = "Notification to write in your journal at 8pm every day."
     private const val importance = NotificationManager.IMPORTANCE_DEFAULT
-    const val journalRequestCode = 200
 
     fun createNotificationChannel(context: Context) {
         if (apiLevelAtOrAbove26()) {

@@ -11,7 +11,6 @@ object DailyQuoteNotificationChannel {
     private const val channelName = "Daily Quote"
     private const val channelDescription = "Notification for a random daily quote at around 8am every day."
     private const val importance = NotificationManager.IMPORTANCE_DEFAULT
-    const val dailyQuoteRequestCode = 100
 
     fun createNotificationChannel(context: Context) {
         if (apiLevelAtOrAbove26()) {

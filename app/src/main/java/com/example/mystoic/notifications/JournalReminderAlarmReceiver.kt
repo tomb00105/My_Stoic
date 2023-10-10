@@ -25,7 +25,7 @@ class JournalReminderAlarmReceiver : BroadcastReceiver() {
             val notificationBuilder = buildJournalReminder(context)
             pushJournalNotification(context, notificationBuilder)
             val alarm = AlarmUtils(context)
-            alarm.initRepeatingAlarm(JournalNotificationChannel.journalRequestCode)
+            alarm.initRepeatingAlarm(AlarmRequestCode.JOURNAL)
         }
     }
 
@@ -33,7 +33,7 @@ class JournalReminderAlarmReceiver : BroadcastReceiver() {
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_IMMUTABLE)
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(context, AlarmRequestCode.JOURNAL.requestCode, intent, PendingIntent.FLAG_IMMUTABLE)
 
         return NotificationCompat.Builder(context, "Journal Channel ID")
             .setSmallIcon(R.drawable.ic_launcher_foreground_stoic)
@@ -46,7 +46,7 @@ class JournalReminderAlarmReceiver : BroadcastReceiver() {
     @SuppressLint("MissingPermission")
     private fun pushJournalNotification(context: Context, notificationBuilder: NotificationCompat.Builder) {
         with(NotificationManagerCompat.from(context)) {
-            notify(0, notificationBuilder.build())
+            notify(AlarmRequestCode.JOURNAL.requestCode, notificationBuilder.build())
         }
     }
 }

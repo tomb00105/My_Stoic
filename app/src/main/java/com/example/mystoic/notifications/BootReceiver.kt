@@ -11,8 +11,8 @@ class BootReceiver : BroadcastReceiver() {
         // Repeating Daily Quote Notification Alarm needs to set again on every reboot.
         if (bootHasJustCompleted(context, intent)) {
             val alarm = AlarmUtils(context)
-            alarm.initRepeatingAlarm(DailyQuoteNotificationChannel.dailyQuoteRequestCode)
-            alarm.initRepeatingAlarm(JournalNotificationChannel.journalRequestCode)
+            alarm.initRepeatingAlarm(AlarmRequestCode.DAILY_QUOTE)
+            alarm.initRepeatingAlarm(AlarmRequestCode.JOURNAL)
         }
     }
 

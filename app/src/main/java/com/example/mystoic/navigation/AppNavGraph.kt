@@ -18,6 +18,8 @@ import com.example.mystoic.ui.favourites.FavouritesScreen
 import com.example.mystoic.ui.home.HomeScreen
 import com.example.mystoic.ui.journal.JournalEntryScreen
 import com.example.mystoic.ui.journal.JournalScreen
+import com.example.mystoic.ui.utils.MyStoicContentType
+import com.example.mystoic.ui.utils.MyStoicNavigationType
 
 sealed class MainNavScreens(
     val route: String,
@@ -39,6 +41,8 @@ sealed class SubScreen(
 @Composable
 fun MainNavHost(
     navController: NavHostController,
+    navigationType: MyStoicNavigationType,
+    contentType: MyStoicContentType,
     modifier: Modifier = Modifier,
 ) {
     NavHost(
@@ -47,7 +51,7 @@ fun MainNavHost(
         modifier = modifier,
     ) {
         composable(route = MainNavScreens.Home.route) {
-            HomeScreen()
+            HomeScreen(navController, navigationType, contentType)
         }
         composable(route = MainNavScreens.Journal.route) {
             JournalScreen(

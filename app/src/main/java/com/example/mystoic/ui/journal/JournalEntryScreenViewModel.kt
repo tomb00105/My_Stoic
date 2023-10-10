@@ -13,13 +13,21 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class JournalEntryScreenViewModel(
     savedStateHandle: SavedStateHandle,
     private val quoteDatabaseRepository: QuoteDatabaseRepository,
 ) : ViewModel() {
 
-    val entryDate: String = checkNotNull(savedStateHandle["entryDate"])
+    private val entryDate: String = checkNotNull(savedStateHandle["entryDate"])
+    private val inputDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    private val parsedDate: Date = inputDateFormat.parse(entryDate)!!
+    private val outputDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    val formattedEntryDate: String = outputDateFormat.format(parsedDate)
+
     lateinit var savedText: String
 
     private val showSaveDialogFlow = MutableStateFlow<Boolean>(false)
