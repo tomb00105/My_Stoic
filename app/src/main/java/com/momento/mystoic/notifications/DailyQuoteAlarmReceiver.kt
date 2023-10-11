@@ -61,6 +61,8 @@ class DailyQuoteAlarmReceiver : BroadcastReceiver() {
             .setContentText("${dailyQuote.text}\n- ${dailyQuote.author}")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(pendingIntent)
+            .setStyle(NotificationCompat.BigTextStyle()
+                .bigText("${dailyQuote.text}\n- ${dailyQuote.author}"))
     }
     private suspend fun getRandomQuote(quoteDatabaseRepository: QuoteDatabaseRepository) : QuoteEntity {
         val quoteFlow = quoteDatabaseRepository.getRandomQuoteStream()

@@ -13,5 +13,5 @@
     <string name="entry_screen_route">journalEntry</string>
     <string name="favourites_screen_route">Favourites</string>
     <string name="stoic_journal">Stoic Journal</string>
-    <string name="journal_notification_content">Put down your thoughts about the day. If you\'re struggling for ideas, try thinking about the daily quote or using the four pillars of Stoicism</string>
+    <string name="journal_notification_content">Put down your thoughts about the day.</string>
 </resources>

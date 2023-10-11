@@ -9,7 +9,7 @@ import androidx.core.app.ComponentActivity
 object JournalNotificationChannel {
     private const val channelId = "Journal Channel ID"
     private const val channelName = "Journal Reminder"
-    private const val channelDescription = "Notification to write in your journal at 8pm every day."
+    private const val channelDescription = "Notification to write in your journal at around 8pm every day."
     private const val importance = NotificationManager.IMPORTANCE_DEFAULT
 
     fun createNotificationChannel(context: Context) {
